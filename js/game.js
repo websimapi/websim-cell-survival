@@ -524,9 +524,18 @@ export class Game {
         this.ctx.save();
 
         // Apply camera transformations
-        this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-        this.ctx.scale(this.camera.scale, this.camera.scale);
-        this.ctx.translate(-this.playerCell.x, -this.playerCell.y);
+        if (this.playerCell) {
+            this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+            this.ctx.scale(this.camera.scale, this.camera.scale);
+            this.ctx.translate(-this.playerCell.x, -this.playerCell.y);
+        } else {
+            // Default view when no player cell
+            const centerX = this.worldSize / 2;
+            const centerY = this.worldSize / 2;
+            this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+            // Could add a default scale as well if needed
+            this.ctx.translate(-centerX, -centerY);
+        }
 
         // Draw grid
         this.drawGrid();
