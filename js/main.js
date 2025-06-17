@@ -57,12 +57,28 @@ async function initGame() {
     document.getElementById('start-game').addEventListener('click', () => {
         const playerName = document.getElementById('player-name').value.trim() || 'Player';
         document.getElementById('start-screen').classList.add('hidden');
+        
+        // Hide UI elements and immediately start tracking mouse movement
+        document.getElementById('stats-panel').classList.remove('hidden');
+        document.getElementById('leaderboard').classList.remove('hidden');
+        
+        // Start tracking mouse movement immediately
+        inputHandler.setCallback(game.handlePlayerMovement);
+        
         game.joinGame(playerName);
     });
     
     // Handle play again button
     document.getElementById('play-again').addEventListener('click', () => {
         document.getElementById('game-over').classList.add('hidden');
+        
+        // Show UI elements again
+        document.getElementById('stats-panel').classList.remove('hidden');
+        document.getElementById('leaderboard').classList.remove('hidden');
+        
+        // Start tracking mouse movement immediately
+        inputHandler.setCallback(game.handlePlayerMovement);
+        
         game.reset();
         game.joinGame();
     });

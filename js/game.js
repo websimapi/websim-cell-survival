@@ -125,6 +125,9 @@ export class Game {
     }
 
     joinGame(playerName) {
+        // Ensure player name is valid
+        this.playerName = playerName || this.playerName || 'Player';
+
         // Create player cell
         const spawnX = Math.random() * this.worldSize;
         const spawnY = Math.random() * this.worldSize;
@@ -135,7 +138,7 @@ export class Game {
             y: spawnY,
             size: this.initialPlayerSize,
             color: this.getRandomCellColor(),
-            name: playerName || this.room.peers[this.room.clientId].username,
+            name: this.playerName,
             isPlayer: true
         });
 
@@ -159,24 +162,10 @@ export class Game {
         this.inputHandler.setCallback(this.handlePlayerMovement);
     }
 
-    handlePlayerMovement(targetX, targetY) {
-        if (!this.playerCell || !this.playerCell.active) return;
-
-        // Calculate direction vector
-        const dx = targetX - this.canvas.width / 2;
-        const dy = targetY - this.canvas.height / 2;
-
-        // Normalize direction
-        const length = Math.sqrt(dx * dx + dy * dy);
-        const normalizedDx = length > 0 ? dx / length : 0;
-        const normalizedDy = length > 0 ? dy / length : 0;
-
-        // Update player direction
-        this.playerCell.setDirection(normalizedDx, normalizedDy);
-
-        // Update presence every few frames to reduce network traffic
-        if (this.frameCount % 5 === 0) {
-            this.updatePresence();
+    handlePlayerMovement = (mouseX, mouseY) => {
+        if (this.playerCell && this.playerCell.active) {
+            const target = { x: mouseX, y: mouseY };
+            this.playerCell.setTarget(target);
         }
     }
 
